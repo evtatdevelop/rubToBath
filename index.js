@@ -6,6 +6,16 @@ const cheerio = require('cheerio');
 
 const bath = 9956;
 
+const stat = addStat => fs.exists('./stat.json', exists => {
+  if ( exists ) fs.readFile('./stat.json', (err, data) => {  
+    const stat = JSON.parse(data);
+     const saveStat = {...stat, ...addStat};
+     fs.writeFile('./stat.json', JSON.stringify(saveStat), (err) => {
+      if ( err ) console.error(err);
+    })
+  })
+})
+
 const getInterest = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -32,6 +42,8 @@ const parseRates = ( thai_month, rubles ) => {
       request('https://www.atb.su/services/exchange/', (err, response, html) => {
         if ( !err && response.statusCode === 200 ) {
           const { cny_rub, usd_rub } = atbSu(html);
+
+          stat( { [Date.now()]: { bath_usd, bath_cny, bath_rub, cny_rub, usd_rub, }, } ); 
 
           const yuan = rubles / cny_rub;
           const dollars = rubles / usd_rub;;
