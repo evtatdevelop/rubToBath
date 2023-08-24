@@ -1,4 +1,4 @@
-# check relative currency rates (terminal web sires parser)
+# Checking relative currency rates (terminal websities parser)
 
 ## Install:
 
